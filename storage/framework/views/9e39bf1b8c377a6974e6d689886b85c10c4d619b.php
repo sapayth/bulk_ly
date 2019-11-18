@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
+<html lang="<?php echo e(config('app.locale')); ?>">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo e(config('app.name', 'Laravel')); ?></title>
     <link rel="stylesheet" type="text/css" href="//fast.appcues.com/widget.css"/>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
+    <link href="<?php echo e(asset('css/app.css')); ?>" rel="stylesheet"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -17,10 +17,10 @@
 
     
     <script type="text/javascript">
-        window.Laravel = {!! json_encode([
+        window.Laravel = <?php echo json_encode([
 			'csrfToken' => csrf_token(),
 			'APP_URL' => env('APP_URL'),
-		]) !!};
+		]); ?>;
     </script>
     <script type="text/javascript">
         (function (w, d, s, l, i) {
@@ -106,7 +106,7 @@ if($user_meta['temp_subs'] === true){
 <script type="text/javascript">
     var tempSubs = {'tempSubs': true};
 </script>
-@include('subscriptions.subscriptions-min')
+<?php echo $__env->make('subscriptions.subscriptions-min', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php
 } else {
 ?>
@@ -119,7 +119,7 @@ if($user_meta['temp_subs'] === true){
 }
 elseif($user->bfriday == 1){
 ?>
-@include('subscriptions.subscriptions-friday')
+<?php echo $__env->make('subscriptions.subscriptions-friday', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php
 }
 else {
@@ -144,8 +144,9 @@ if($user_meta['temp_user'] === true){
         <form id="update-temp-user" class="form-horizontal" role="form" method="POST"
               action="https://app.bulk.ly/update-temp-user"
               style="position: absolute;width: 100%;max-width: 600px;background: #ffffff;padding: 30px;transform: translate(-50%, -50%);top: 50%;left: 50%;">
-            {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{\Auth::id()}}">
+            <?php echo e(csrf_field()); ?>
+
+            <input type="hidden" name="user_id" value="<?php echo e(\Auth::id()); ?>">
             <h3 class="text-center">Create Account</h3>
             <p class="text-center">By creating an account, you'll be able to login to Bulkly to access your imported
                 Buffer data.</p>
@@ -243,12 +244,12 @@ if($user_meta['temp_user'] === true){
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ route('login') }}">Login</a></li>
-                        <li><a href="{{ route('register') }}">Register</a></li>
-                    @else
+                    <?php if(Auth::guest()): ?>
+                        <li><a href="<?php echo e(route('login')); ?>">Login</a></li>
+                        <li><a href="<?php echo e(route('register')); ?>">Register</a></li>
+                    <?php else: ?>
                         <li>
-                            <a href="{{ route('support') }}"><span class="fa fa-envelope"></span></a>
+                            <a href="<?php echo e(route('support')); ?>"><span class="fa fa-envelope"></span></a>
                         </li>
                         <li>
                             <a id="my-widget" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -257,27 +258,24 @@ if($user_meta['temp_user'] === true){
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-expanded="false">
-                                @if(count(\Bulkly\User::find(Auth::id())->socialaccounts) > 0)
+                                <?php if(count(\Bulkly\User::find(Auth::id())->socialaccounts) > 0): ?>
                                     <img class="navavatar"
-                                         src="{{Bulkly\User::find(Auth::id())->socialaccounts[0]->avatar}}">
-                                @else
+                                         src="<?php echo e(Bulkly\User::find(Auth::id())->socialaccounts[0]->avatar); ?>">
+                                <?php else: ?>
                                     <img class="navavatar" src="/images/noavater.png">
-                                @endif
+                                <?php endif; ?>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu navd" role="menu">
                                 <li>
-                                    <a href="{{ route('auth.logout') }}">
+                                    <a href="<?php echo e(route('auth.logout')); ?>">
                                         Logout
                                     </a>
-                                    {{--<form id="logout-form" action="{{ route('auth.logout') }}" method="POST"
-                                          style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>--}}
+                                    
                                 </li>
                             </ul>
                         </li>
-                    @endif
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -290,51 +288,51 @@ if($user_meta['temp_user'] === true){
     <nav class="navbar left-navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="<?php echo e(url('/')); ?>">
                     <img src="/images/logo.png">
                 </a>
             </div>
             <?php $route = \Request::route()->getName(); ?>
             <ul class="nav navbar-nav">
-                @if( \Auth::user()->email == env('SU'))
-                    <li><a href="{{ url('/admin') }}"> <i class="fa fa-user"></i>Admin</a></li>
-                @endif
-                <li @if ($route=='home') class="active" @endif><a href="{{ url('/') }}"> <i class="fa fa-home"></i> Home</a>
+                <?php if( \Auth::user()->email == env('SU')): ?>
+                    <li><a href="<?php echo e(url('/admin')); ?>"> <i class="fa fa-user"></i>Admin</a></li>
+                <?php endif; ?>
+                <li <?php if($route=='home'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/')); ?>"> <i class="fa fa-home"></i> Home</a>
                 </li>
-                @if(session()->has('buffer_token'))
-                    <li @if ($route=='content-upload' || $route=='content-pending' || $route=='content-active' || $route=='content-completed') class="active" @endif>
-                        <a href="{{url('/content-upload')}}" class="toggle"> <i class="fa fa-upload"></i> Content Upload</a>
+                <?php if(session()->has('buffer_token')): ?>
+                    <li <?php if($route=='content-upload' || $route=='content-pending' || $route=='content-active' || $route=='content-completed'): ?> class="active" <?php endif; ?>>
+                        <a href="<?php echo e(url('/content-upload')); ?>" class="toggle"> <i class="fa fa-upload"></i> Content Upload</a>
                     </li>
-                    <li @if ($route=='content-curation' || $route=='content-curation-pending' || $route=='content-curation-active' || $route=='content-curation-completed') class="active" @endif>
-                        <a href="{{url('/content-curation')}}" class="toggle"> <i class="fa fa-file-text-o"></i> Content
+                    <li <?php if($route=='content-curation' || $route=='content-curation-pending' || $route=='content-curation-active' || $route=='content-curation-completed'): ?> class="active" <?php endif; ?>>
+                        <a href="<?php echo e(url('/content-curation')); ?>" class="toggle"> <i class="fa fa-file-text-o"></i> Content
                             Curation</a></li>
-                    <li @if ($route=='rss-automation' || $route=='rss-automation-pending' || $route=='rss-automation-active' || $route=='rss-automation-completed') class="active" @endif>
-                        <a href="{{url('/rss-automation')}}" class="toggle"> <i class="fa fa-rss"></i> RSS
+                    <li <?php if($route=='rss-automation' || $route=='rss-automation-pending' || $route=='rss-automation-active' || $route=='rss-automation-completed'): ?> class="active" <?php endif; ?>>
+                        <a href="<?php echo e(url('/rss-automation')); ?>" class="toggle"> <i class="fa fa-rss"></i> RSS
                             Automation</a></li>
-                    <li @if ($route=='analytics') class="active" @endif><a href="{{ url('/analytics') }}"> <i
+                    <li <?php if($route=='analytics'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/analytics')); ?>"> <i
                                     class="fa fa-line-chart"></i> Analytics</a></li>
-                    <li @if ($route=='calendar') class="active" @endif><a href="{{ url('/calendar') }}"> <i
+                    <li <?php if($route=='calendar'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/calendar')); ?>"> <i
                                     class="fa fa-calendar"></i> Calendar</a></li>
-                    <li @if ($route=='social-accounts') class="active" @endif><a href="{{ url('/social-accounts') }}">
+                    <li <?php if($route=='social-accounts'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/social-accounts')); ?>">
                             <i class="fa fa-user"></i>Social Accounts</a></li>
-                    <li @if ($route=='settings') class="active" @endif><a href="{{ url('/settings') }}"> <i
+                    <li <?php if($route=='settings'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/settings')); ?>"> <i
                                     class="fa fa-gear"></i> Settings</a></li>
 
-                    <li @if ($route=='history') class="active" @endif><a href="{{ url('/history') }}"> <i
+                    <li <?php if($route=='history'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/history')); ?>"> <i
                                     class="fa fa-home"></i> History</a></li>
 
-                    <li @if ($route=='posts') class="active" @endif><a href="{{ url('/posts') }}"> <i
+                    <li <?php if($route=='posts'): ?> class="active" <?php endif; ?>><a href="<?php echo e(url('/posts')); ?>"> <i
                                     class="fa fa-home"></i> Posts</a></li>
-                @endif
+                <?php endif; ?>
             </ul>
         </div><!-- /.container-fluid -->
     </nav>
-    @yield('content')
+    <?php echo $__env->yieldContent('content'); ?>
 </div>
 
 <script src="//fast.appcues.com/widget-bundle.js" type="text/javascript"></script>
 
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="<?php echo e(asset('js/app.js')); ?>"></script>
 <script>
 
     var hash = window.location.hash;
@@ -633,7 +631,7 @@ if($user_meta['temp_subs'] === true){
             };
             $.ajax({
                 type: "POST",
-                url: '{{route('homePostingFrequency')}}',
+                url: '<?php echo e(route('homePostingFrequency')); ?>',
                 data: freqParam,
                 success: function(res) {
                     if(res.status === 2000){
